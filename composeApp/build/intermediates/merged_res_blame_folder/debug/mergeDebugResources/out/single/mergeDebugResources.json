@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "com.nozero.app.composeApp-debug-51:/drawable_ic_action_check.xml.flat",
+        "source": "com.nozero.app.composeApp-androidMain-53:/drawable/ic_action_check.xml"
+    },
+    {
+        "merged": "com.nozero.app.composeApp-debug-51:/drawable_ic_habit_good.xml.flat",
+        "source": "com.nozero.app.composeApp-androidMain-53:/drawable/ic_habit_good.xml"
+    },
+    {
+        "merged": "com.nozero.app.composeApp-debug-51:/drawable_ic_habit_bad.xml.flat",
+        "source": "com.nozero.app.composeApp-androidMain-53:/drawable/ic_habit_bad.xml"
+    }
+]

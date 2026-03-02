@@ -1,0 +1,57 @@
+name: Play Store Release
+
+on:
+  workflow_dispatch: # Allows manual trigger from the GitHub Actions UI
+  push:
+    tags:
+      - 'v*' # Triggers when a version tag like v1.0.0 is pushed
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Decode Keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_FILE_BASE64 }}
+        run: |
+          echo "$KEYSTORE_BASE64" | base64 --decode > android-release.keystore
+
+      - name: Decode Google Play Service Account JSON
+        env:
+          PLAY_CONSOLE_JSON_BASE64: ${{ secrets.PLAY_STORE_CONFIG_JSON }}
+        run: |
+          # If the user stored raw JSON, they can skip decoding.
+          # Here we assume base64, or just write raw string if not base64.
+          # To be safe and support raw json, we can just echo it, but base64 is safer for multiline.
+          # Since the implementation plan said raw json, let's treat it as raw string if we can.
+          # Actually, GitHub secrets handle raw json fine. We will output the raw secret directly.
+          echo "${{ secrets.PLAY_STORE_CONFIG_JSON }}" > play-store-service-account.json
+
+      - name: Build Signed App Bundle
+        env:
+          KEYSTORE_FILE_PATH: ${GITHUB_WORKSPACE}/android-release.keystore
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: ./gradlew :composeApp:bundleRelease --no-daemon
+
+      - name: Upload to Google Play (Internal Testing)
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJson: play-store-service-account.json
+          packageName: com.nozero.app
+          releaseFiles: composeApp/build/outputs/bundle/release/composeApp-release.aab
+          track: internal
+          status: draft # Important: upload as draft first to ensure safety
+          inAppUpdatePriority: 2

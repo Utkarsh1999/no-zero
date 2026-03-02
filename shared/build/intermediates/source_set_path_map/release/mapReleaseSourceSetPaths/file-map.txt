@@ -1,0 +1,18 @@
+com.nozero.shared-sqlite-framework-2.4.0-0 /Users/utkarsh/.gradle/caches/8.9/transforms/13230037952fd55dd5d3edd6ec3c17d0/transformed/sqlite-framework-2.4.0/res
+com.nozero.shared-core-1.13.1-1 /Users/utkarsh/.gradle/caches/8.9/transforms/2440635efaf4b2b3c35a33814aa58b15/transformed/core-1.13.1/res
+com.nozero.shared-core-ktx-1.13.1-2 /Users/utkarsh/.gradle/caches/8.9/transforms/43852a7997e4e6be35412b3b73af1eac/transformed/core-ktx-1.13.1/res
+com.nozero.shared-annotation-experimental-1.4.0-3 /Users/utkarsh/.gradle/caches/8.9/transforms/806b308404eb70da96dd1711ca41de12/transformed/annotation-experimental-1.4.0/res
+com.nozero.shared-lifecycle-runtime-2.6.2-4 /Users/utkarsh/.gradle/caches/8.9/transforms/94503b2cd16b73d99ec4b70079258afe/transformed/lifecycle-runtime-2.6.2/res
+com.nozero.shared-profileinstaller-1.3.0-5 /Users/utkarsh/.gradle/caches/8.9/transforms/c3f025f7add69c3343379ec80bb751b3/transformed/profileinstaller-1.3.0/res
+com.nozero.shared-startup-runtime-1.1.1-6 /Users/utkarsh/.gradle/caches/8.9/transforms/d57b3b90707c88b537f49c4ea91d9498/transformed/startup-runtime-1.1.1/res
+com.nozero.shared-sqlite-2.4.0-7 /Users/utkarsh/.gradle/caches/8.9/transforms/e513afa549fd46c646e7a77743db6304/transformed/sqlite-2.4.0/res
+com.nozero.shared-core-runtime-2.2.0-8 /Users/utkarsh/.gradle/caches/8.9/transforms/f6d46b20245593ab264e21187564fa42/transformed/core-runtime-2.2.0/res
+com.nozero.shared-pngs-9 /Users/utkarsh/Desktop/Projects/Mobile Projects/no-zero/shared/build/generated/res/pngs/release
+com.nozero.shared-resValues-10 /Users/utkarsh/Desktop/Projects/Mobile Projects/no-zero/shared/build/generated/res/resValues/release
+com.nozero.shared-mergeReleaseResources-11 /Users/utkarsh/Desktop/Projects/Mobile Projects/no-zero/shared/build/intermediates/incremental/release/mergeReleaseResources/merged.dir
+com.nozero.shared-mergeReleaseResources-12 /Users/utkarsh/Desktop/Projects/Mobile Projects/no-zero/shared/build/intermediates/incremental/release/mergeReleaseResources/stripped.dir
+com.nozero.shared-release-13 /Users/utkarsh/Desktop/Projects/Mobile Projects/no-zero/shared/build/intermediates/merged_res/release/mergeReleaseResources
+com.nozero.shared-androidMain-14 /Users/utkarsh/Desktop/Projects/Mobile Projects/no-zero/shared/src/androidMain/res
+com.nozero.shared-androidRelease-15 /Users/utkarsh/Desktop/Projects/Mobile Projects/no-zero/shared/src/androidRelease/res
+com.nozero.shared-main-16 /Users/utkarsh/Desktop/Projects/Mobile Projects/no-zero/shared/src/main/res
+com.nozero.shared-release-17 /Users/utkarsh/Desktop/Projects/Mobile Projects/no-zero/shared/src/release/res

@@ -1,0 +1,2 @@
+
+<shared_commonMain>:com.nozero.shared.core:com.nozero.shared.data.local:#com.nozero.shared.data.local.shared:com.nozero.shared.data.mapper:!com.nozero.shared.data.repository:com.nozero.shared.di:com.nozero.shared.domain.model:#com.nozero.shared.domain.repository: com.nozero.shared.domain.usecase:com.nozero.shared.motivation:com.nozero.shared.notification
