@@ -24,7 +24,7 @@ private class NoZeroDatabaseImpl(
 
   public object Schema : SqlSchema<QueryResult.Value<Unit>> {
     override val version: Long
-      get() = 2
+      get() = 3
 
     override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
       driver.execute(null, """
@@ -67,6 +67,10 @@ private class NoZeroDatabaseImpl(
       if (oldVersion <= 1 && newVersion > 1) {
         driver.execute(null,
             "ALTER TABLE HabitEntity ADD COLUMN earnedGraceDays INTEGER NOT NULL DEFAULT 0", 0)
+      }
+      if (oldVersion <= 2 && newVersion > 2) {
+        driver.execute(null,
+            "ALTER TABLE HabitEntity ADD COLUMN allowBackdateLogging INTEGER NOT NULL DEFAULT 1", 0)
       }
       return QueryResult.Unit
     }

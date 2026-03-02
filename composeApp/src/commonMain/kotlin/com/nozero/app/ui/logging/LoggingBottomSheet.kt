@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import kotlin.math.round
 
 /**
  * Bottom sheet for logging time-based habits.
@@ -221,7 +222,7 @@ fun CountLoggingSheet(
 private fun formatNumber(n: Int): String {
     return if (n >= 1000) {
         val k = n / 1000.0
-        if (k == k.toInt().toDouble()) "${k.toInt()}K" else "${"%.1f".format(k)}K"
+        if (k == k.toInt().toDouble()) "${k.toInt()}K" else "${(round(k * 10) / 10)}K"
     } else {
         n.toString()
     }

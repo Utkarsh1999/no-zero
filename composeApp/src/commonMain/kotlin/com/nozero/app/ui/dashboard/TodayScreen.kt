@@ -28,6 +28,7 @@ import com.nozero.app.viewmodel.TodayUiState
 import com.nozero.app.viewmodel.TodayViewModel
 import com.nozero.shared.domain.model.HabitType
 import com.nozero.shared.domain.model.TrackingType
+import kotlin.math.round
 
 @Composable
 fun TodayScreen(
@@ -102,6 +103,7 @@ fun TodayScreen(
                             EmptyStateView(onAddHabit = onAddHabit)
                         } else {
                             TodayContent(
+                                viewModel= viewModel,
                                 state = current,
                                 onBinaryToggle = viewModel::onToggleCompletion,
                                 onTimedTap = { habit -> sheetHabit = habit },
@@ -139,6 +141,7 @@ fun TodayScreen(
 @Composable
 private fun TodayContent(
     state: TodayUiState.Success,
+    viewModel: TodayViewModel,
     onBinaryToggle: (String, Boolean) -> Unit,
     onTimedTap: (HabitItemUiModel) -> Unit,
     onCountTap: (HabitItemUiModel) -> Unit,
@@ -559,7 +562,7 @@ private fun ErrorView(message: String) {
 private fun formatNumber(n: Int): String {
     return if (n >= 1000) {
         val k = n / 1000.0
-        if (k == k.toInt().toDouble()) "${k.toInt()}K" else "${"%.1f".format(k)}K"
+        if (k == k.toInt().toDouble()) "${k.toInt()}K" else "${(round(k * 10) / 10)}K"
     } else {
         n.toString()
     }
