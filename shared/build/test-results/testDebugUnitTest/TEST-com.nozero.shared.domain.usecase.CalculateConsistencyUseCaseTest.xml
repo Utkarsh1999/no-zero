@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.nozero.shared.domain.usecase.CalculateConsistencyUseCaseTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-03-01T20:26:00" hostname="Utkarshs-MacBook-Pro.local" time="0.021">
+  <properties/>
+  <testcase name="recovery bonus applied when completing after a miss" classname="com.nozero.shared.domain.usecase.CalculateConsistencyUseCaseTest" time="0.019"/>
+  <testcase name="three consecutive completions gives streak of 3" classname="com.nozero.shared.domain.usecase.CalculateConsistencyUseCaseTest" time="0.001"/>
+  <testcase name="mixed history preserves best streak" classname="com.nozero.shared.domain.usecase.CalculateConsistencyUseCaseTest" time="0.0"/>
+  <testcase name="isInRecovery is true when last entry is missed" classname="com.nozero.shared.domain.usecase.CalculateConsistencyUseCaseTest" time="0.0"/>
+  <testcase name="empty history returns zero metrics" classname="com.nozero.shared.domain.usecase.CalculateConsistencyUseCaseTest" time="0.0"/>
+  <testcase name="relapse breaks streak the same as miss" classname="com.nozero.shared.domain.usecase.CalculateConsistencyUseCaseTest" time="0.0"/>
+  <testcase name="consistency score never goes below zero" classname="com.nozero.shared.domain.usecase.CalculateConsistencyUseCaseTest" time="0.0"/>
+  <testcase name="miss breaks streak and resets current to zero" classname="com.nozero.shared.domain.usecase.CalculateConsistencyUseCaseTest" time="0.0"/>
+  <testcase name="single completed day" classname="com.nozero.shared.domain.usecase.CalculateConsistencyUseCaseTest" time="0.0"/>
+  <testcase name="exempted day does NOT break streak" classname="com.nozero.shared.domain.usecase.CalculateConsistencyUseCaseTest" time="0.001"/>
+  <testcase name="isInRecovery is false when last entry is completed" classname="com.nozero.shared.domain.usecase.CalculateConsistencyUseCaseTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

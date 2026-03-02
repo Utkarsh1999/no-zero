@@ -1,0 +1,62 @@
+CREATE TABLE HabitEntity (
+    id TEXT NOT NULL PRIMARY KEY,
+    title TEXT NOT NULL,
+    description TEXT,
+    type TEXT NOT NULL,
+    frequencyType TEXT NOT NULL,
+    frequencyValue TEXT,
+    trackingType TEXT NOT NULL,
+    trackingTarget TEXT,
+    reinforcementStyle TEXT NOT NULL DEFAULT 'NEUTRAL',
+    reminderTime TEXT,
+    isArchived INTEGER NOT NULL DEFAULT 0,
+    createdAt INTEGER NOT NULL,
+    isDeleted INTEGER NOT NULL DEFAULT 0,
+    earnedGraceDays INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE TABLE CompletionEntity (
+    habitId TEXT NOT NULL,
+    date TEXT NOT NULL,
+    value REAL NOT NULL DEFAULT 1.0,
+    status TEXT NOT NULL,
+    PRIMARY KEY (habitId, date),
+    FOREIGN KEY (habitId) REFERENCES HabitEntity(id) ON DELETE CASCADE
+);
+
+-- Habit queries
+getActiveHabits:
+SELECT * FROM HabitEntity WHERE isArchived = 0 AND isDeleted = 0 ORDER BY createdAt DESC;
+
+getHabitById:
+SELECT * FROM HabitEntity WHERE id = ? AND isDeleted = 0;
+
+insertHabit:
+INSERT OR REPLACE INTO HabitEntity(id, title, description, type, frequencyType, frequencyValue, trackingType, trackingTarget, reinforcementStyle, reminderTime, isArchived, createdAt, isDeleted, earnedGraceDays)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?);
+
+updateHabit:
+UPDATE HabitEntity SET title = ?, description = ?, frequencyType = ?, frequencyValue = ?, trackingType = ?, trackingTarget = ?, reinforcementStyle = ?, reminderTime = ?, earnedGraceDays = ?
+WHERE id = ?;
+
+archiveHabit:
+UPDATE HabitEntity SET isArchived = 1 WHERE id = ?;
+
+deleteHabit:
+UPDATE HabitEntity SET isDeleted = 1 WHERE id = ?;
+
+-- Completion queries
+getCompletionsForHabit:
+SELECT * FROM CompletionEntity WHERE habitId = ? ORDER BY date DESC;
+
+getCompletionsForDate:
+SELECT * FROM CompletionEntity WHERE date = ?;
+
+getCompletionRange:
+SELECT * FROM CompletionEntity WHERE habitId = ? AND date >= ? AND date <= ? ORDER BY date ASC;
+
+insertCompletion:
+INSERT OR REPLACE INTO CompletionEntity(habitId, date, value, status) VALUES (?, ?, ?, ?);
+
+deleteCompletion:
+DELETE FROM CompletionEntity WHERE habitId = ? AND date = ?;
