@@ -42,7 +42,8 @@ private class NoZeroDatabaseImpl(
           |    isArchived INTEGER NOT NULL DEFAULT 0,
           |    createdAt INTEGER NOT NULL,
           |    isDeleted INTEGER NOT NULL DEFAULT 0,
-          |    earnedGraceDays INTEGER NOT NULL DEFAULT 0
+          |    earnedGraceDays INTEGER NOT NULL DEFAULT 0,
+          |    allowBackdateLogging INTEGER NOT NULL DEFAULT 1
           |)
           """.trimMargin(), 0)
       driver.execute(null, """

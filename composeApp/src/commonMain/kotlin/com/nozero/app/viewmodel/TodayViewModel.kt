@@ -30,6 +30,7 @@ class TodayViewModel(
     private val _uiState = MutableStateFlow<TodayUiState>(TodayUiState.Loading)
     val uiState: StateFlow<TodayUiState> = _uiState.asStateFlow()
 
+    private val dateOffsetFlow = MutableStateFlow(0)
     private val currentDateFlow = MutableStateFlow(
         Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
     )
@@ -37,13 +38,25 @@ class TodayViewModel(
     private val today: LocalDate
         get() = currentDateFlow.value
 
+    // Current date being viewed by the user
+    private val evalDateFlow = MutableStateFlow(today)
+
+    fun changeDateOffset(days: Int) {
+        val newOffset = dateOffsetFlow.value + days
+        if (newOffset <= 0) { // Don't allow future dates
+            dateOffsetFlow.value = newOffset
+            evalDateFlow.value = today.plus(DatePeriod(days = newOffset))
+        }
+    }
+
     init {
         viewModelScope.launch {
             while (true) {
                 val current = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
                 if (current != currentDateFlow.value) {
                     currentDateFlow.value = current
-                    // Also run grace day processing when day actually rolls over
+                    // Re-calculate eval date if we roll over
+                    evalDateFlow.value = current.plus(DatePeriod(days = dateOffsetFlow.value))
                     processGraceDays()
                 }
                 delay(60_000) // check every minute
@@ -58,12 +71,12 @@ class TodayViewModel(
     @OptIn(ExperimentalCoroutinesApi::class)
     private suspend fun loadHabits() {
         try {
-            currentDateFlow.flatMapLatest { currentDate ->
+            evalDateFlow.flatMapLatest { evalDate ->
                 combine(
                     getActiveHabits(),
-                    completionRepository.getCompletionsForDate(currentDate)
+                    completionRepository.getCompletionsForDate(evalDate)
                 ) { habits, todayCompletions ->
-                    Triple(habits, todayCompletions, currentDate)
+                    Triple(habits, todayCompletions, evalDate)
                 }
             }.collect { triple ->
                 val habits = triple.first
@@ -100,6 +113,9 @@ class TodayViewModel(
                             style = habit.reinforcementStyle
                         )
 
+                        val isToday = evalDate == today
+                        val canLog = isToday || habit.allowBackdateLogging
+
                         HabitItemUiModel(
                             id = habit.id,
                             title = habit.title,
@@ -109,7 +125,8 @@ class TodayViewModel(
                             consistencyScore = metrics.consistencyScore,
                             isCompletedToday = isCompleted,
                             loggedValue = todayCompletion?.value ?: 0.0,
-                            motivationMessage = msg
+                            motivationMessage = msg,
+                            canLog = canLog
                         )
                     }
 
@@ -122,7 +139,8 @@ class TodayViewModel(
                     }
 
                     _uiState.value = TodayUiState.Success(
-                        dateLabel = formatDate(evalDate),
+                        dateLabel = if (evalDate == today) "TODAY" else formatDate(evalDate).uppercase(),
+                        isToday = evalDate == today,
                         habits = items,
                         dailyMotivation = globalMsg
                     )
@@ -135,7 +153,7 @@ class TodayViewModel(
     /** Binary toggle (for TrackingType.Binary) */
     fun onToggleCompletion(habitId: String, currentlyCompleted: Boolean) {
         viewModelScope.launch {
-            toggleCompletion(habitId, today, currentlyCompleted)
+            toggleCompletion(habitId, evalDateFlow.value, currentlyCompleted)
         }
     }
 
@@ -144,7 +162,7 @@ class TodayViewModel(
         viewModelScope.launch {
             toggleCompletion.logValue(
                 habitId = habitId,
-                date = today,
+                date = evalDateFlow.value,
                 value = value,
                 status = CompletionStatus.COMPLETED
             )
@@ -156,7 +174,7 @@ class TodayViewModel(
         viewModelScope.launch {
             toggleCompletion.logValue(
                 habitId = habitId,
-                date = today,
+                date = evalDateFlow.value,
                 value = if (stayed) 1.0 else 0.0,
                 status = if (stayed) CompletionStatus.COMPLETED else CompletionStatus.RELAPSED
             )

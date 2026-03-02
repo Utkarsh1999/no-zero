@@ -27,7 +27,8 @@ fun CreateHabitScreen(
         frequency: HabitFrequency,
         trackingType: TrackingType,
         reinforcementStyle: ReinforcementStyle,
-        reminderTime: LocalTime?
+        reminderTime: LocalTime?,
+        allowBackdateLogging: Boolean
     ) -> Unit,
     onBack: () -> Unit
 ) {
@@ -37,6 +38,7 @@ fun CreateHabitScreen(
     var selectedType by remember { mutableStateOf(HabitType.GOOD) }
     var selectedTracking by remember { mutableStateOf<TrackingType>(TrackingType.Binary) }
     var selectedStyle by remember { mutableStateOf(ReinforcementStyle.NEUTRAL) }
+    var allowBackdateLogging by remember { mutableStateOf(true) }
 
     // Schedule state
     var frequencyMode by remember { mutableStateOf("daily") } // daily, specific, times
@@ -250,6 +252,30 @@ fun CreateHabitScreen(
             ChipOption("Bold", selectedStyle == ReinforcementStyle.AGGRESSIVE, onClick = { selectedStyle = ReinforcementStyle.AGGRESSIVE }, modifier = Modifier.weight(1f))
         }
 
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // ── Accountability ───────────────────────────────
+        SectionLabel("ACCOUNTABILITY")
+        Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+            Switch(
+                checked = allowBackdateLogging,
+                onCheckedChange = { allowBackdateLogging = it }
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+            Column {
+                Text(
+                    text = "Allow Backdated Logging",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = "If disabled, you cannot check off missed days.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+
         Spacer(modifier = Modifier.height(40.dp))
 
         // ── Create Button ────────────────────────────────
@@ -274,7 +300,8 @@ fun CreateHabitScreen(
                         selectedFrequency,
                         finalTracking,
                         selectedStyle,
-                        reminderTime
+                        reminderTime,
+                        allowBackdateLogging
                     )
                 }
             },

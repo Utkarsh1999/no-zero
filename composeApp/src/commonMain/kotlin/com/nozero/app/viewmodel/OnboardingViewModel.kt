@@ -35,7 +35,8 @@ class OnboardingViewModel(
                     trackingType = template.trackingType,
                     reinforcementStyle = template.reinforcementStyle,
                     reminderTime = customTime,
-                    createdAt = Clock.System.now()
+                    createdAt = Clock.System.now(),
+                    allowBackdateLogging = true
                 )
                 createHabitUseCase(habit)
             }
@@ -49,7 +50,8 @@ class OnboardingViewModel(
         frequency: HabitFrequency,
         trackingType: TrackingType,
         reinforcementStyle: ReinforcementStyle,
-        reminderTime: LocalTime? = null
+        reminderTime: LocalTime? = null,
+        allowBackdateLogging: Boolean = true
     ) {
         viewModelScope.launch {
             val habit = Habit(
@@ -61,7 +63,8 @@ class OnboardingViewModel(
                 trackingType = trackingType,
                 reinforcementStyle = reinforcementStyle,
                 reminderTime = reminderTime,
-                createdAt = Clock.System.now()
+                createdAt = Clock.System.now(),
+                allowBackdateLogging = allowBackdateLogging
             )
             createHabitUseCase(habit)
         }

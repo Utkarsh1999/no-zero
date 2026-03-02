@@ -28,9 +28,10 @@ public class NoZeroDatabaseQueries(
     createdAt: Long,
     isDeleted: Long,
     earnedGraceDays: Long,
+    allowBackdateLogging: Long,
   ) -> T): Query<T> = Query(-1_874_777_529, arrayOf("HabitEntity"), driver, "NoZeroDatabase.sq",
       "getActiveHabits",
-      "SELECT HabitEntity.id, HabitEntity.title, HabitEntity.description, HabitEntity.type, HabitEntity.frequencyType, HabitEntity.frequencyValue, HabitEntity.trackingType, HabitEntity.trackingTarget, HabitEntity.reinforcementStyle, HabitEntity.reminderTime, HabitEntity.isArchived, HabitEntity.createdAt, HabitEntity.isDeleted, HabitEntity.earnedGraceDays FROM HabitEntity WHERE isArchived = 0 AND isDeleted = 0 ORDER BY createdAt DESC") {
+      "SELECT HabitEntity.id, HabitEntity.title, HabitEntity.description, HabitEntity.type, HabitEntity.frequencyType, HabitEntity.frequencyValue, HabitEntity.trackingType, HabitEntity.trackingTarget, HabitEntity.reinforcementStyle, HabitEntity.reminderTime, HabitEntity.isArchived, HabitEntity.createdAt, HabitEntity.isDeleted, HabitEntity.earnedGraceDays, HabitEntity.allowBackdateLogging FROM HabitEntity WHERE isArchived = 0 AND isDeleted = 0 ORDER BY createdAt DESC") {
       cursor ->
     mapper(
       cursor.getString(0)!!,
@@ -46,13 +47,14 @@ public class NoZeroDatabaseQueries(
       cursor.getLong(10)!!,
       cursor.getLong(11)!!,
       cursor.getLong(12)!!,
-      cursor.getLong(13)!!
+      cursor.getLong(13)!!,
+      cursor.getLong(14)!!
     )
   }
 
   public fun getActiveHabits(): Query<HabitEntity> = getActiveHabits { id, title, description, type,
       frequencyType, frequencyValue, trackingType, trackingTarget, reinforcementStyle, reminderTime,
-      isArchived, createdAt, isDeleted, earnedGraceDays ->
+      isArchived, createdAt, isDeleted, earnedGraceDays, allowBackdateLogging ->
     HabitEntity(
       id,
       title,
@@ -67,7 +69,8 @@ public class NoZeroDatabaseQueries(
       isArchived,
       createdAt,
       isDeleted,
-      earnedGraceDays
+      earnedGraceDays,
+      allowBackdateLogging
     )
   }
 
@@ -86,6 +89,7 @@ public class NoZeroDatabaseQueries(
     createdAt: Long,
     isDeleted: Long,
     earnedGraceDays: Long,
+    allowBackdateLogging: Long,
   ) -> T): Query<T> = GetHabitByIdQuery(id) { cursor ->
     mapper(
       cursor.getString(0)!!,
@@ -101,13 +105,15 @@ public class NoZeroDatabaseQueries(
       cursor.getLong(10)!!,
       cursor.getLong(11)!!,
       cursor.getLong(12)!!,
-      cursor.getLong(13)!!
+      cursor.getLong(13)!!,
+      cursor.getLong(14)!!
     )
   }
 
   public fun getHabitById(id: String): Query<HabitEntity> = getHabitById(id) { id_, title,
       description, type, frequencyType, frequencyValue, trackingType, trackingTarget,
-      reinforcementStyle, reminderTime, isArchived, createdAt, isDeleted, earnedGraceDays ->
+      reinforcementStyle, reminderTime, isArchived, createdAt, isDeleted, earnedGraceDays,
+      allowBackdateLogging ->
     HabitEntity(
       id_,
       title,
@@ -122,7 +128,8 @@ public class NoZeroDatabaseQueries(
       isArchived,
       createdAt,
       isDeleted,
-      earnedGraceDays
+      earnedGraceDays,
+      allowBackdateLogging
     )
   }
 
@@ -221,11 +228,12 @@ public class NoZeroDatabaseQueries(
     isArchived: Long,
     createdAt: Long,
     earnedGraceDays: Long,
+    allowBackdateLogging: Long,
   ) {
     driver.execute(-1_802_966_041, """
-        |INSERT OR REPLACE INTO HabitEntity(id, title, description, type, frequencyType, frequencyValue, trackingType, trackingTarget, reinforcementStyle, reminderTime, isArchived, createdAt, isDeleted, earnedGraceDays)
-        |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?)
-        """.trimMargin(), 13) {
+        |INSERT OR REPLACE INTO HabitEntity(id, title, description, type, frequencyType, frequencyValue, trackingType, trackingTarget, reinforcementStyle, reminderTime, isArchived, createdAt, isDeleted, earnedGraceDays, allowBackdateLogging)
+        |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?)
+        """.trimMargin(), 14) {
           bindString(0, id)
           bindString(1, title)
           bindString(2, description)
@@ -239,6 +247,7 @@ public class NoZeroDatabaseQueries(
           bindLong(10, isArchived)
           bindLong(11, createdAt)
           bindLong(12, earnedGraceDays)
+          bindLong(13, allowBackdateLogging)
         }
     notifyQueries(-1_802_966_041) { emit ->
       emit("HabitEntity")
@@ -255,12 +264,13 @@ public class NoZeroDatabaseQueries(
     reinforcementStyle: String,
     reminderTime: String?,
     earnedGraceDays: Long,
+    allowBackdateLogging: Long,
     id: String,
   ) {
     driver.execute(2_021_703_639, """
-        |UPDATE HabitEntity SET title = ?, description = ?, frequencyType = ?, frequencyValue = ?, trackingType = ?, trackingTarget = ?, reinforcementStyle = ?, reminderTime = ?, earnedGraceDays = ?
+        |UPDATE HabitEntity SET title = ?, description = ?, frequencyType = ?, frequencyValue = ?, trackingType = ?, trackingTarget = ?, reinforcementStyle = ?, reminderTime = ?, earnedGraceDays = ?, allowBackdateLogging = ?
         |WHERE id = ?
-        """.trimMargin(), 10) {
+        """.trimMargin(), 11) {
           bindString(0, title)
           bindString(1, description)
           bindString(2, frequencyType)
@@ -270,7 +280,8 @@ public class NoZeroDatabaseQueries(
           bindString(6, reinforcementStyle)
           bindString(7, reminderTime)
           bindLong(8, earnedGraceDays)
-          bindString(9, id)
+          bindLong(9, allowBackdateLogging)
+          bindString(10, id)
         }
     notifyQueries(2_021_703_639) { emit ->
       emit("HabitEntity")
@@ -339,7 +350,7 @@ public class NoZeroDatabaseQueries(
 
     override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
         driver.executeQuery(1_960_381_572,
-        """SELECT HabitEntity.id, HabitEntity.title, HabitEntity.description, HabitEntity.type, HabitEntity.frequencyType, HabitEntity.frequencyValue, HabitEntity.trackingType, HabitEntity.trackingTarget, HabitEntity.reinforcementStyle, HabitEntity.reminderTime, HabitEntity.isArchived, HabitEntity.createdAt, HabitEntity.isDeleted, HabitEntity.earnedGraceDays FROM HabitEntity WHERE id = ? AND isDeleted = 0""",
+        """SELECT HabitEntity.id, HabitEntity.title, HabitEntity.description, HabitEntity.type, HabitEntity.frequencyType, HabitEntity.frequencyValue, HabitEntity.trackingType, HabitEntity.trackingTarget, HabitEntity.reinforcementStyle, HabitEntity.reminderTime, HabitEntity.isArchived, HabitEntity.createdAt, HabitEntity.isDeleted, HabitEntity.earnedGraceDays, HabitEntity.allowBackdateLogging FROM HabitEntity WHERE id = ? AND isDeleted = 0""",
         mapper, 1) {
       bindString(0, id)
     }

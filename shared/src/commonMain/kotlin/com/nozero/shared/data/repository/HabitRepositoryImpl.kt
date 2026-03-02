@@ -48,7 +48,8 @@ class HabitRepositoryImpl(
             reminderTime = data.reminderTime,
             isArchived = data.isArchived,
             createdAt = data.createdAt,
-            earnedGraceDays = data.earnedGraceDays
+            earnedGraceDays = data.earnedGraceDays,
+            allowBackdateLogging = data.allowBackdateLogging
         )
     }
 
@@ -64,6 +65,7 @@ class HabitRepositoryImpl(
             reinforcementStyle = data.reinforcementStyle,
             reminderTime = data.reminderTime,
             earnedGraceDays = data.earnedGraceDays,
+            allowBackdateLogging = data.allowBackdateLogging,
             id = data.id
         )
     }

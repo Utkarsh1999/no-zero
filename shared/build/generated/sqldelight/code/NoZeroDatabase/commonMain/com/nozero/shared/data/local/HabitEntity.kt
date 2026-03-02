@@ -18,4 +18,5 @@ public data class HabitEntity(
   public val createdAt: Long,
   public val isDeleted: Long,
   public val earnedGraceDays: Long,
+  public val allowBackdateLogging: Long,
 )

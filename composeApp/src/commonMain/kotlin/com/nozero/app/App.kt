@@ -70,8 +70,8 @@ fun App() {
 
             composable(Screen.CreateHabit.route) {
                 CreateHabitScreen(
-                    onHabitCreated = { title, description, type, frequency, tracking, style, reminderTime ->
-                        onboardingViewModel.createCustomHabit(title, description, type, frequency, tracking, style, reminderTime)
+                    onHabitCreated = { title, description, type, frequency, tracking, style, reminderTime, allowBackdateLogging ->
+                        onboardingViewModel.createCustomHabit(title, description, type, frequency, tracking, style, reminderTime, allowBackdateLogging)
                         onboardingViewModel.completeOnboarding()
                         navController.navigate(Screen.Today.route) {
                             popUpTo(0) { inclusive = true }
@@ -128,8 +128,8 @@ fun App() {
             // Standalone Add Habit — custom form (reuses same screen)
             composable(Screen.AddHabitCustom.route) {
                 CreateHabitScreen(
-                    onHabitCreated = { title, description, type, frequency, tracking, style, reminderTime ->
-                        onboardingViewModel.createCustomHabit(title, description, type, frequency, tracking, style, reminderTime)
+                    onHabitCreated = { title, description, type, frequency, tracking, style, reminderTime, allowBackdateLogging ->
+                        onboardingViewModel.createCustomHabit(title, description, type, frequency, tracking, style, reminderTime, allowBackdateLogging)
                         // Pop back to Today (remove both add screens from stack)
                         navController.popBackStack(Screen.Today.route, inclusive = false)
                     },

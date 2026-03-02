@@ -15,7 +15,8 @@ data class HabitItemUiModel(
     val consistencyScore: Double,
     val isCompletedToday: Boolean,
     val loggedValue: Double,
-    val motivationMessage: String
+    val motivationMessage: String,
+    val canLog: Boolean
 )
 
 /**
@@ -25,6 +26,7 @@ sealed interface TodayUiState {
     data object Loading : TodayUiState
     data class Success(
         val dateLabel: String,
+        val isToday: Boolean,
         val habits: List<HabitItemUiModel>,
         val dailyMotivation: String
     ) : TodayUiState

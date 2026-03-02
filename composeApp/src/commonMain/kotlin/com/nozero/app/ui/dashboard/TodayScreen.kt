@@ -153,17 +153,41 @@ private fun TodayContent(
         contentPadding = PaddingValues(vertical = 32.dp)
     ) {
         item {
-            Text(
-                text = state.dateLabel.uppercase(),
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(bottom = 4.dp)
-            )
-            Text(
-                text = "Today",
-                style = MaterialTheme.typography.headlineLarge,
-                color = MaterialTheme.colorScheme.onBackground
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(onClick = { viewModel.changeDateOffset(-1) }) {
+                    Text("<", style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+                Column(
+                    modifier = Modifier.weight(1f),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = state.dateLabel,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(bottom = 4.dp)
+                    )
+                    Text(
+                        text = if (state.isToday) "Today" else "Historian",
+                        style = MaterialTheme.typography.headlineLarge,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        textAlign = TextAlign.Center
+                    )
+                }
+                IconButton(
+                    onClick = { viewModel.changeDateOffset(1) },
+                    enabled = !state.isToday
+                ) {
+                    Text(
+                        text = ">",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = if (!state.isToday) MaterialTheme.colorScheme.onSurfaceVariant else Color.Transparent
+                    )
+                }
+            }
         }
 
         item {
@@ -215,6 +239,7 @@ private fun BinaryHabitCard(
 ) {
     val checkColor by animateColorAsState(
         targetValue = if (habit.isCompletedToday) MaterialTheme.colorScheme.tertiary
+        else if (!habit.canLog) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
         else MaterialTheme.colorScheme.outline,
         animationSpec = spring(stiffness = Spring.StiffnessMedium),
         label = "checkColor"
@@ -229,11 +254,11 @@ private fun BinaryHabitCard(
                 .clickable(
                     interactionSource = remember { MutableInteractionSource() },
                     indication = null
-                ) { onToggle() },
+                ) { if (habit.canLog) onToggle() },
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = if (habit.isCompletedToday) "✓" else "○",
+                text = if (!habit.canLog && !habit.isCompletedToday) "🔒" else if (habit.isCompletedToday) "✓" else "○",
                 style = MaterialTheme.typography.titleLarge,
                 color = checkColor,
                 textAlign = TextAlign.Center
@@ -262,15 +287,17 @@ private fun TimedHabitCard(
                 .clickable(
                     interactionSource = remember { MutableInteractionSource() },
                     indication = null
-                ) { onLogTap() },
+                ) { if (habit.canLog) onLogTap() },
             shape = RoundedCornerShape(12.dp),
             color = if (habit.isCompletedToday) MaterialTheme.colorScheme.tertiary.copy(alpha = 0.15f)
+            else if (!habit.canLog) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
             else MaterialTheme.colorScheme.outline.copy(alpha = 0.15f)
         ) {
             Text(
-                text = if (habit.loggedValue > 0) "${habit.loggedValue.toInt()}m" else "Log",
+                text = if (!habit.canLog && !habit.isCompletedToday) "🔒" else if (habit.loggedValue > 0) "${habit.loggedValue.toInt()}m" else "Log",
                 style = MaterialTheme.typography.labelLarge,
                 color = if (habit.isCompletedToday) MaterialTheme.colorScheme.tertiary
+                else if (!habit.canLog) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
                 else MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
             )
@@ -299,15 +326,17 @@ private fun CountHabitCard(
                 .clickable(
                     interactionSource = remember { MutableInteractionSource() },
                     indication = null
-                ) { onLogTap() },
+                ) { if (habit.canLog) onLogTap() },
             shape = RoundedCornerShape(12.dp),
             color = if (habit.isCompletedToday) MaterialTheme.colorScheme.tertiary.copy(alpha = 0.15f)
+            else if (!habit.canLog) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
             else MaterialTheme.colorScheme.outline.copy(alpha = 0.15f)
         ) {
             Text(
-                text = if (habit.loggedValue > 0) formatNumber(habit.loggedValue.toInt()) else "Log",
+                text = if (!habit.canLog && !habit.isCompletedToday) "🔒" else if (habit.loggedValue > 0) formatNumber(habit.loggedValue.toInt()) else "Log",
                 style = MaterialTheme.typography.labelLarge,
                 color = if (habit.isCompletedToday) MaterialTheme.colorScheme.tertiary
+                else if (!habit.canLog) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
                 else MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
             )
@@ -347,6 +376,19 @@ private fun AvoidanceHabitCard(
                     text = "Slipped",
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp)
+                )
+            }
+        } else if (!habit.canLog) {
+            // Locked
+            Surface(
+                shape = RoundedCornerShape(12.dp),
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+            ) {
+                Text(
+                    text = "🔒 Locked",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
                     modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp)
                 )
             }

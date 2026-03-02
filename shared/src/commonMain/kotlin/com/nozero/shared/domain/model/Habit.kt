@@ -19,7 +19,8 @@ data class Habit(
     val reminderTime: LocalTime? = null,
     val isArchived: Boolean = false,
     val createdAt: Instant,
-    val earnedGraceDays: Int = 0
+    val earnedGraceDays: Int = 0,
+    val allowBackdateLogging: Boolean = true
 )
 
 /**

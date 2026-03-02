@@ -1,0 +1,5 @@
+R_DEF: Internal format may change without notice
+local
+drawable ic_action_check
+drawable ic_habit_bad
+drawable ic_habit_good

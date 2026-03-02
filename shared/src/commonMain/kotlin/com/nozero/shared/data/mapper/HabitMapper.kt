@@ -18,7 +18,8 @@ fun HabitEntity.toDomain(): Habit {
         reminderTime = reminderTime?.let { LocalTime.parse(it) },
         isArchived = isArchived != 0L,
         createdAt = Instant.fromEpochMilliseconds(createdAt),
-        earnedGraceDays = earnedGraceDays.toInt()
+        earnedGraceDays = earnedGraceDays.toInt(),
+        allowBackdateLogging = allowBackdateLogging != 0L
     )
 }
 
@@ -36,7 +37,8 @@ fun Habit.toEntity(): HabitEntityData {
         reminderTime = reminderTime?.toString(),
         isArchived = if (isArchived) 1L else 0L,
         createdAt = createdAt.toEpochMilliseconds(),
-        earnedGraceDays = earnedGraceDays.toLong()
+        earnedGraceDays = earnedGraceDays.toLong(),
+        allowBackdateLogging = if (allowBackdateLogging) 1L else 0L
     )
 }
 
@@ -56,7 +58,8 @@ data class HabitEntityData(
     val reminderTime: String?,
     val isArchived: Long,
     val createdAt: Long,
-    val earnedGraceDays: Long
+    val earnedGraceDays: Long,
+    val allowBackdateLogging: Long
 )
 
 private fun mapFrequency(type: String, value: String?): HabitFrequency = when (type) {

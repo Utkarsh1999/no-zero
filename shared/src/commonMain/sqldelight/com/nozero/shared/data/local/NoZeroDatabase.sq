@@ -12,7 +12,8 @@ CREATE TABLE HabitEntity (
     isArchived INTEGER NOT NULL DEFAULT 0,
     createdAt INTEGER NOT NULL,
     isDeleted INTEGER NOT NULL DEFAULT 0,
-    earnedGraceDays INTEGER NOT NULL DEFAULT 0
+    earnedGraceDays INTEGER NOT NULL DEFAULT 0,
+    allowBackdateLogging INTEGER NOT NULL DEFAULT 1
 );
 
 CREATE TABLE CompletionEntity (
@@ -32,11 +33,11 @@ getHabitById:
 SELECT * FROM HabitEntity WHERE id = ? AND isDeleted = 0;
 
 insertHabit:
-INSERT OR REPLACE INTO HabitEntity(id, title, description, type, frequencyType, frequencyValue, trackingType, trackingTarget, reinforcementStyle, reminderTime, isArchived, createdAt, isDeleted, earnedGraceDays)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?);
+INSERT OR REPLACE INTO HabitEntity(id, title, description, type, frequencyType, frequencyValue, trackingType, trackingTarget, reinforcementStyle, reminderTime, isArchived, createdAt, isDeleted, earnedGraceDays, allowBackdateLogging)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?);
 
 updateHabit:
-UPDATE HabitEntity SET title = ?, description = ?, frequencyType = ?, frequencyValue = ?, trackingType = ?, trackingTarget = ?, reinforcementStyle = ?, reminderTime = ?, earnedGraceDays = ?
+UPDATE HabitEntity SET title = ?, description = ?, frequencyType = ?, frequencyValue = ?, trackingType = ?, trackingTarget = ?, reinforcementStyle = ?, reminderTime = ?, earnedGraceDays = ?, allowBackdateLogging = ?
 WHERE id = ?;
 
 archiveHabit:
